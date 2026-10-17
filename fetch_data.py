@@ -43,8 +43,20 @@ def fetch_statcan(vector_id, latest_n):
 
     return rows
 
-cpi = fetch_statcan(41690973, 3)
-print("CPI:", cpi)
+def calc_yoy(rows):
+    results = []
+    for i in range(12, len(rows)):
+        date, current = rows[i]
+        _, year_ago = rows[i - 12]
+        yoy = (current / year_ago - 1) * 100
+        results.append((date, round(yoy, 1)))
+    return results
+
+cpi = fetch_statcan(41690973, 24)
+inflation = calc_yoy(cpi)
+
+for date, rate in inflation:
+    print(date, f"{rate}%")
 
 
 
